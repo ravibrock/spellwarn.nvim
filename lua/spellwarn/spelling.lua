@@ -2,7 +2,9 @@ local M = {}
 
 function M.get_error_type(word, bufnr)
     return vim.api.nvim_buf_call(bufnr, function() -- Docs recommend to wrap as such
-        return "spell" .. vim.spell.check(word)[1][2]
+        local check = vim.spell.check(word)
+        -- If the word "is" spelled correctly, but is being flagged, it's a capitalization error
+        return "spell" .. ((check[1] and check[1][2]) or "cap")
     end)
 end
 
@@ -13,7 +15,7 @@ function M.get_spelling_errors(bufnr)
     if not vim.o.spell or string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil then return errors end
 
     -- Get location of first spelling error to start while loop
-    vim.fn.setpos(".", { bufnr, 1, 1, 0 })
+    vim.fn.setpos(".", { bufnr, 1, 2, 0 })
     local minpos = vim.fn.getpos(".")
     vim.cmd("silent normal! ]s")
     local location = vim.fn.getpos(".")

@@ -23,14 +23,16 @@ function M.update_diagnostics(opts, bufnr)
     local errors = require("spellwarn.spelling").get_spelling_errors(bufnr)
     local diags = {}
     for _, error in pairs(errors) do
-        if opts.severity[error.type] then
-            diags[#diags + 1] = {
-                col      = error.col - 1, -- 0-indexed
-                lnum     = error.lnum - 1, -- 0-indexed
-                message  = opts.prefix .. error.word,
-                severity = vim.diagnostic.severity[opts.severity[error.type]],
-                source   = "spellwarn",
-            }
+        if error.word ~= "" then
+            if opts.severity[error.type] then
+                diags[#diags + 1] = {
+                    col      = error.col - 1, -- 0-indexed
+                    lnum     = error.lnum - 1, -- 0-indexed
+                    message  = opts.prefix .. error.word,
+                    severity = vim.diagnostic.severity[opts.severity[error.type]],
+                    source   = "spellwarn",
+                }
+            end
         end
     end
     vim.diagnostic.reset(namespace, bufnr)
