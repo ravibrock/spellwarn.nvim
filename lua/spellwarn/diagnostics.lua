@@ -16,7 +16,7 @@ function M.update_diagnostics(opts, bufnr)
     if opts.max_file_size and vim.api.nvim_buf_line_count(bufnr) > opts.max_file_size then return end
     local ft = vim.fn.getbufvar(bufnr, "&filetype")
     if opts.ft_config[ft] == false or (opts.ft_config[ft] == nil and opts.ft_default == false) then
-        vim.lsp.diagnostic.reset(namespace, bufnr)
+        vim.diagnostic.reset(namespace, bufnr)
         return
     end
 
@@ -33,6 +33,7 @@ function M.update_diagnostics(opts, bufnr)
             }
         end
     end
+    vim.diagnostic.reset(namespace, bufnr)
     vim.diagnostic.set(namespace, bufnr, diags)
 end
 
@@ -50,7 +51,7 @@ end
 function M.disable()
     vim.api.nvim_create_augroup("Spellwarn", {})
     for _, bufnr in pairs(get_bufs_loaded()) do
-        vim.lsp.diagnostic.reset(namespace, bufnr)
+        vim.diagnostic.reset(namespace, bufnr)
     end
 end
 
