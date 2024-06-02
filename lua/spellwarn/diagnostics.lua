@@ -40,7 +40,7 @@ function M.enable(opts)
     vim.api.nvim_create_augroup("Spellwarn", {})
     vim.api.nvim_create_autocmd(opts.event, {
         callback = function() M.update_diagnostics(opts, vim.fn.bufnr("%")) end,
-        description = "Update Spellwarn diagnostics",
+        desc = "Update Spellwarn diagnostics",
     })
     for _, bufnr in pairs(get_bufs_loaded()) do
         M.update_diagnostics(opts, bufnr)
