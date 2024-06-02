@@ -11,12 +11,12 @@ local defaults = {
     ft_default = true, -- whether to enable or disable for all filetypes by default
     max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
     severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
-        spellbad   = "WARNING",
+        spellbad   = "WARN",
         spellcap   = "HINT",
         spelllocal = "HINT",
         spellrare  = "INFO",
     },
-    prefix = "possible misspelling: ", -- prefix for each diagnostic message
+    prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
 }
 
 function M.setup(opts)
