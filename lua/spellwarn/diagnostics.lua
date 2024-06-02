@@ -11,7 +11,7 @@ local function get_bufs_loaded()
     return bufs_loaded
 end
 
--- TODO: try wrapping this with a function to make it run asynchronously?
+-- PERF: try wrapping this with a function to make it run asynchronously?
 function M.update_diagnostics(opts, bufnr)
     if opts.max_file_size and vim.api.nvim_buf_line_count(bufnr) > opts.max_file_size then return end
     local ft = vim.fn.getbufvar(bufnr, "&filetype")
