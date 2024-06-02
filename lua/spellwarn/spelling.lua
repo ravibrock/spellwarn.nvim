@@ -10,7 +10,7 @@ function M.get_spelling_errors(bufnr)
     -- Save current window view and create table to store errors
     local window = vim.fn.winsaveview()
     local errors = {}
-    if string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil then return errors end
+    if not vim.o.spell or string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil then return errors end
 
     -- Get location of first spelling error to start while loop
     vim.fn.setpos(".", { bufnr, 1, 1, 0 })
