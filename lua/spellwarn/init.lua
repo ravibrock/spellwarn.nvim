@@ -1,6 +1,6 @@
 local M = {}
 local defaults = {
-    event = "TextChanged", -- event(s) to refresh diagnostics on (could update to BufWritePost for performance)
+    event = { "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT" }, -- event(s) to refresh diagnostics on
     ft_config = { -- filetypes to override ft_default for
         alpha   = false,
         help    = false,
