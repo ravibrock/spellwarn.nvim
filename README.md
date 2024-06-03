@@ -15,7 +15,7 @@ A simpler solution, therefore, is to use Neovim's existing spellchecking and dia
 I recommend using [Lazy.nvim](https://github.com/folke/lazy.nvim):
 ```lua
 {
-    "ravibrock/spellwarn.nvim"
+    "ravibrock/spellwarn.nvim",
     event = "VeryLazy",
     config = true,
 }
