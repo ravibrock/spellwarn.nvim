@@ -1,5 +1,6 @@
 local M = {}
 local defaults = {
+    -- FIX: Trouble.nvim jump to diagnostic is slightly buggy with `TextChanged` event; no good workaround though AFAICT
     event = { "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT" }, -- event(s) to refresh diagnostics on
     ft_config = { -- filetypes to override ft_default for
         alpha   = false,
