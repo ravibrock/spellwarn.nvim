@@ -25,7 +25,13 @@ I recommend using [Lazy.nvim](https://github.com/folke/lazy.nvim):
 Pass any of the following options to `require("spellwarn").setup()`:
 ```lua
 {
-    event = { "TextChanged", "TextChangedI", "TextChangedP", "TextChangedT" }, -- event(s) to refresh diagnostics on
+    event = { -- event(s) to refresh diagnostics on
+        "CursorHold",
+        "TextChanged",
+        "TextChangedI",
+        "TextChangedP",
+        "TextChangedT",
+    },
     ft_config = { -- filetypes to override ft_default for
         alpha   = false,
         help    = false,
