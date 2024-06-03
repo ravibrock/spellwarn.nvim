@@ -35,7 +35,7 @@ Pass any of the following options to `require("spellwarn").setup()`:
     },
     ft_default = true, -- whether to enable or disable for all filetypes by default
     max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
-    severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
+    severity = { -- severity for each spelling error type (false to disable)
         spellbad   = "WARN",
         spellcap   = "HINT",
         spelllocal = "HINT",
