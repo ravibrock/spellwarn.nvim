@@ -11,10 +11,14 @@ end
 function M.get_spelling_errors(bufnr)
     -- Save current window view and create table to store errors
     local window = vim.fn.winsaveview()
+    local foldstatus = vim.o.foldenable
+    local concealstatus = vim.o.conceallevel
     local errors = {}
     if not vim.o.spell or string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil then return errors end
 
     -- Get location of first spelling error to start while loop
+    vim.o.foldenable = false
+    vim.o.conceallevel = 0
     vim.fn.setpos(".", { bufnr, 1, 2, 0 })
     local minpos = vim.fn.getpos(".")
     vim.cmd("silent normal! ]s")
@@ -54,6 +58,8 @@ function M.get_spelling_errors(bufnr)
 
     -- Restore window view and return errors
     vim.fn.winrestview(window)
+    vim.o.foldenable = foldstatus
+    vim.o.conceallevel = concealstatus
     return errors
 end
 
