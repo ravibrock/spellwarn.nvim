@@ -20,8 +20,11 @@ local defaults = {
 }
 
 function M.setup(opts)
-    if not opts then opts = {} end
-    vim.tbl_deep_extend("force", defaults, opts)
+    -- With most options we want to overwrite the defaults, but with `severity` we want to extend
+    local severity = defaults.severity
+    opts = opts or {}
+    defaults = vim.tbl_extend("force", defaults, opts)
+    defaults.severity = vim.tbl_extend("force", severity, opts.severity or {})
     require("spellwarn.diagnostics").setup(defaults)
 end
 
