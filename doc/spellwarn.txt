@@ -34,7 +34,7 @@ I recommend using Lazy.nvim <https://github.com/folke/lazy.nvim>
 
 >lua
     {
-        "ravibrock/spellwarn.nvim"
+        "ravibrock/spellwarn.nvim",
         event = "VeryLazy",
         config = true,
     }
