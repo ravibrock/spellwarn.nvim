@@ -1,4 +1,4 @@
-*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 June 03
+*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 June 07
 
 ==============================================================================
 Table of Contents                                *spellwarn-table-of-contents*
@@ -40,10 +40,13 @@ I recommend using Lazy.nvim <https://github.com/folke/lazy.nvim>
     }
 <
 
+Youmay also want to add the word "spellwarn" to your Neovim dictionary. This
+can be done by putting the cursor onto "spellwarn" and hitting `zg`.
+
 
 CONFIGURATION                         *spellwarn-spellwarn.nvim-configuration*
 
-Passany of the following options to `require("spellwarn").setup()`
+Pass any of the following options to `require("spellwarn").setup()`
 
 >lua
     {
