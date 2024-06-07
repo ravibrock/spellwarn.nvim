@@ -24,6 +24,7 @@ function M.update_diagnostics(opts, bufnr)
     local diags = {}
     for _, error in pairs(errors) do
         if error.word ~= "" then
+        if error.word ~= "" and error.word ~= "spellwarn" then
             if opts.severity[error.type] then
                 diags[#diags + 1] = {
                     col      = error.col - 1, -- 0-indexed
