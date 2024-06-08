@@ -68,8 +68,8 @@ function M.get_spelling_errors_iter(bufnr, start_row, start_col, end_row, end_co
     if end_row == nil then end_row = #(vim.api.nvim_buf_get_lines(bufnr, 1, -1, false)) + 1 end
     if end_col == nil then end_col = string.len(vim.api.nvim_buf_get_lines(bufnr, end_row - 1, end_row, false)[1]) end
     local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row + 1, false)
-    lines[1] = string.sub(lines[1], start_col + 1)
     lines[#lines] = string.sub(lines[#lines], 1, end_col + 1)
+    lines[1] = string.sub(lines[1], start_col + 1)
     local errors = {}
     for n, line in ipairs(lines) do
         local errs = vim.spell.check(line)
