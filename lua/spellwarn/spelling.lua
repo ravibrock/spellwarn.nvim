@@ -92,36 +92,30 @@ end
 
 function M.get_spelling_errors_ts(bufnr)
     local errors = {}
-    vim.treesitter.get_parser(bufnr):parse(true)
-    local node = vim.treesitter.get_node({ bufnr = 0, pos = { 0, 0 } })
+    local buf_highlighter = vim.treesitter.highlighter.active[bufnr]
 
-    ---@diagnostic disable-next-line: redefined-local
-    local function parserec(node)
-        local start_row, start_col = node:start()
-        local end_row, end_col = node:end_()
-        for i = 0, node:child_count() - 1 do
-            parserec(node:child(i))
-        end
-        -- TODO: This seems to be the bottleneck
-        local spell = false
-        for _, capture in pairs(vim.treesitter.get_captures_at_pos(bufnr, start_row, start_col)) do
-            if capture.capture == "spell" then
-                spell = true
-                break
+    if not buf_highlighter then return errors end
+    buf_highlighter.tree:for_each_tree(function(tstree, tree)
+        ---@diagnostic disable: invisible
+        if not tstree then return end
+        local root = tstree:root()
+
+        local q = buf_highlighter:get_query(tree:lang())
+
+        -- Some injected languages may not have highlight queries.
+        if not q:query() then return end
+
+        for capture, node in q:query():iter_captures(root, bufnr, 0, -1) do
+            local c = q._query.captures[capture] -- Name of the capture in the query
+            if c == "spell" then
+                local start_row, start_col, end_row, end_col = node:range()
+                for k, v in pairs(M.get_spelling_errors_iter(bufnr, start_row, start_col, end_row, end_col)) do
+                    errors[k] = v
+                end
             end
         end
-        if spell then
-            for k, v in pairs(M.get_spelling_errors_iter(bufnr, start_row, start_col, end_row, end_col)) do
-                errors[k] = v
-            end
-        end
-    end
-
-    while node do
-        parserec(node)
-        node = node:next_sibling()
-    end
-
+        ---@diagnostic enable: invisible
+    end)
     return errors
 end
 
