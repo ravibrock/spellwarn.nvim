@@ -8,13 +8,20 @@ function M.get_error_type(word, bufnr)
     end)
 end
 
-function M.get_spelling_errors(bufnr)
+function M.check_spellwarn_comment(bufnr, linenr) -- Check for spellwarn:disable* comments
+    local above = (linenr > 1 and vim.api.nvim_buf_get_lines(bufnr, linenr - 2, linenr - 1, false)[1]) or ""
+    local above_val = string.find(above, "spellwarn:disable-next-line", 1, true) ~= nil
+    local cur = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1]
+    local cur_val = string.find(cur, "spellwarn:disable-line", 1, true) ~= nil
+    return above_val or cur_val
+end
+
+function M.get_spelling_errors_cursor(bufnr)
     -- Save current window view and create table to store errors
     local window = vim.fn.winsaveview()
     local foldstatus = vim.o.foldenable
     local concealstatus = vim.o.conceallevel
     local errors = {}
-    if not vim.o.spell or string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil then return errors end
 
     -- Get location of first spelling error to start while loop
     vim.o.foldenable = false
@@ -24,16 +31,8 @@ function M.get_spelling_errors(bufnr)
     vim.cmd("silent normal! ]s")
     local location = vim.fn.getpos(".")
 
-    local function check_spellwarn_comment() -- Check for spellwarn:disable* comments
-        local current_line_number = vim.fn.line(".")
-        local above = (current_line_number > 1 and vim.fn.getline(current_line_number - 1)) or ""
-        local above_val = string.find(above, "spellwarn:disable-next-line", 1, true) ~= nil
-        local cur = vim.fn.getline(current_line_number)
-        local cur_val = string.find(cur, "spellwarn:disable-line", 1, true) ~= nil
-        return above_val or cur_val
-    end
     local function adjust_table() -- Add error to table
-        if check_spellwarn_comment() then return end
+        if M.check_spellwarn_comment(bufnr, vim.fn.line(".")) then return end
         local word = vim.fn.expand("<cword>")
         table.insert(errors, {
             col  = location[3],
@@ -60,6 +59,69 @@ function M.get_spelling_errors(bufnr)
     vim.fn.winrestview(window)
     vim.o.foldenable = foldstatus
     vim.o.conceallevel = concealstatus
+    return errors
+end
+
+function M.get_spelling_errors_iter(bufnr, start_row, start_col, end_row, end_col)
+    if start_row == nil then start_row = 0 end
+    if start_col == nil then start_col = 0 end
+    if end_row == nil then end_row = #(vim.api.nvim_buf_get_lines(bufnr, 1, -1, false)) + 1 end
+    if end_col == nil then end_col = string.len(vim.api.nvim_buf_get_lines(bufnr, end_row - 1, end_row, false)[1]) end
+    local lines = vim.api.nvim_buf_get_lines(bufnr, start_row, end_row + 1, false)
+    lines[1] = string.sub(lines[1], start_col + 1)
+    lines[#lines] = string.sub(lines[#lines], 1, end_col + 1)
+    local errors = {}
+    for n, line in ipairs(lines) do
+        local errs = vim.spell.check(line)
+        for _, err in ipairs(errs) do
+            local i = start_row + n
+            local offset = (n == 1 and start_col) or 0
+            local key = i .. (err[3] + offset) -- By inserting based on location, we avoid duplicates
+            if not M.check_spellwarn_comment(bufnr, i) then
+                errors[key] = {
+                    lnum = i,
+                    col = err[3] + offset,
+                    word = err[1],
+                    type = "spell" .. err[2],
+                }
+            end
+        end
+    end
+    return errors
+end
+
+function M.get_spelling_errors_ts(bufnr)
+    local errors = {}
+    vim.treesitter.get_parser(bufnr):parse(true)
+    local node = vim.treesitter.get_node({ bufnr = 0, pos = { 0, 0 } })
+
+    ---@diagnostic disable-next-line: redefined-local
+    local function parserec(node)
+        local start_row, start_col = node:start()
+        local end_row, end_col = node:end_()
+        for i = 0, node:child_count() - 1 do
+            parserec(node:child(i))
+        end
+        -- TODO: This seems to be the bottleneck
+        local spell = false
+        for _, capture in pairs(vim.treesitter.get_captures_at_pos(bufnr, start_row, start_col)) do
+            if capture.capture == "spell" then
+                spell = true
+                break
+            end
+        end
+        if spell then
+            for k, v in pairs(M.get_spelling_errors_iter(bufnr, start_row, start_col, end_row, end_col)) do
+                errors[k] = v
+            end
+        end
+    end
+
+    while node do
+        parserec(node)
+        node = node:next_sibling()
+    end
+
     return errors
 end
 
