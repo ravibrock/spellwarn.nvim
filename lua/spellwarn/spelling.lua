@@ -25,8 +25,6 @@ function M.get_spelling_errors_main(opts, bufnr)
     elseif bufopts == true or bufopts == "cursor" then
         return M.get_spelling_errors_cursor(bufnr)
     elseif bufopts == "iter" then
-        return M.get_spelling_errors_iter(bufnr)
-    elseif bufopts == "treesitter" then
         return M.get_spelling_errors_ts(bufnr)
     else
         error("Invalid value for ft_config: " .. bufopts)

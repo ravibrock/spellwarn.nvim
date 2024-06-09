@@ -9,14 +9,14 @@ local defaults = {
         "TextChangedP",
         "TextChangedT",
     },
-    ft_config = { -- spellcheck method: "cursor", "iter", "treesitter", or boolean
+    ft_config = { -- spellcheck method: "cursor", "iter", or boolean
         alpha   = false,
         help    = false,
         lazy    = false,
         lspinfo = false,
         mason   = false,
     },
-    ft_default = true, -- whether to enable or disable for all filetypes by default
+    ft_default = true, -- default option for unspecified filetypes
     max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
     severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
         spellbad   = "WARN",
