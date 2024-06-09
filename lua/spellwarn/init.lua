@@ -3,12 +3,13 @@ local defaults = {
     -- FIX: Trouble.nvim jump to diagnostic is slightly buggy with `TextChanged` event; no good workaround though AFAICT
     event = { -- event(s) to refresh diagnostics on
         "CursorHold",
+        "InsertLeave",
         "TextChanged",
         "TextChangedI",
         "TextChangedP",
         "TextChangedT",
     },
-    ft_config = { -- filetypes to override ft_default for
+    ft_config = { -- spellcheck method: "cursor", "iter", "treesitter", or boolean
         alpha   = false,
         help    = false,
         lazy    = false,

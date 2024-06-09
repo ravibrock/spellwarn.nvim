@@ -20,9 +20,8 @@ function M.update_diagnostics(opts, bufnr)
         return
     end
 
-    local errors = require("spellwarn.spelling").get_spelling_errors(bufnr)
     local diags = {}
-    for _, error in pairs(errors) do
+    for _, error in pairs(require("spellwarn.spelling").get_spelling_errors_main(opts, bufnr) or {}) do
         if error.word ~= "" and error.word ~= "spellwarn" then
             if opts.severity[error.type] then
                 diags[#diags + 1] = {
