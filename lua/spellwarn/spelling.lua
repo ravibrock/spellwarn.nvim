@@ -20,7 +20,7 @@ function M.get_spelling_errors_main(opts, bufnr)
     local bufopts = opts.ft_config[vim.o.filetype] or opts.ft_default
     local disable_comment =  string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil
 
-    if disable_comment or not bufopts then
+    if vim.api.nvim_get_mode().mode == "i" or disable_comment or not bufopts then
         return {}
     elseif bufopts == true or bufopts == "cursor" then
         return M.get_spelling_errors_cursor(bufnr)

@@ -3,6 +3,7 @@ local defaults = {
     -- FIX: Trouble.nvim jump to diagnostic is slightly buggy with `TextChanged` event; no good workaround though AFAICT
     event = { -- event(s) to refresh diagnostics on
         "CursorHold",
+        "InsertLeave",
         "TextChanged",
         "TextChangedI",
         "TextChangedP",
