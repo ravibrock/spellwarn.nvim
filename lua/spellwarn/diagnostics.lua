@@ -11,7 +11,7 @@ local function get_bufs_loaded()
     return bufs_loaded
 end
 
-function M.update_diagnostics_main(opts, bufnr)
+function M.update_diagnostics(opts, bufnr)
     if opts.max_file_size and vim.api.nvim_buf_line_count(bufnr) > opts.max_file_size then return end
     local ft = vim.fn.getbufvar(bufnr, "&filetype")
     if opts.ft_config[ft] == false or (opts.ft_config[ft] == nil and opts.ft_default == false) then
@@ -19,16 +19,8 @@ function M.update_diagnostics_main(opts, bufnr)
         return
     end
 
-    -- TODO: Add check for treesitter
-    -- TODO: Test to ensure this method gets the different types of spelling errors correct
-    local errors
-    if not vim.o.spell or string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil then
-        errors = {}
-    else
-        errors = require("spellwarn.spelling").get_spelling_errors_ts(bufnr)
-    end
     local diags = {}
-    for _, error in pairs(errors) do
+    for _, error in pairs(require("spellwarn.spelling").get_spelling_errors_main(opts, bufnr) or {}) do
         if error.word ~= "" and error.word ~= "spellwarn" then
             if opts.severity[error.type] then
                 diags[#diags + 1] = {
@@ -44,12 +36,6 @@ function M.update_diagnostics_main(opts, bufnr)
     vim.diagnostic.reset(namespace, bufnr)
     -- TODO: Add suffix diagnostics with type of spelling error the way that LSP diagnostics do
     vim.diagnostic.set(namespace, bufnr, diags, { severity_sort = true })
-end
-
--- PERF: This is supposed to be async but it's blocking the UI
--- PERF: Schedule helps but it still causes jitters
-function M.update_diagnostics(opts, bufnr)
-    M.update_diagnostics_main(opts, bufnr)
 end
 
 function M.enable(opts)

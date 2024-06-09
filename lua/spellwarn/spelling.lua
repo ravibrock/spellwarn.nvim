@@ -16,6 +16,23 @@ function M.check_spellwarn_comment(bufnr, linenr) -- Check for spellwarn:disable
     return above_val or cur_val
 end
 
+function M.get_spelling_errors_main(opts, bufnr)
+    local bufopts = opts.ft_config[vim.o.filetype] or opts.ft_default
+    local disable_comment =  string.find(vim.fn.getline(1), "spellwarn:disable", 1, true) ~= nil
+
+    if disable_comment or not bufopts then
+        return {}
+    elseif bufopts == true or bufopts == "cursor" then
+        return M.get_spelling_errors_cursor(bufnr)
+    elseif bufopts == "iter" then
+        return M.get_spelling_errors_iter(bufnr)
+    elseif bufopts == "treesitter" then
+        return M.get_spelling_errors_ts(bufnr)
+    else
+        error("Invalid value for ft_config: " .. bufopts)
+    end
+end
+
 function M.get_spelling_errors_cursor(bufnr)
     -- Save current window view and create table to store errors
     local window = vim.fn.winsaveview()
@@ -92,9 +109,10 @@ end
 
 function M.get_spelling_errors_ts(bufnr)
     local errors = {}
-    local buf_highlighter = vim.treesitter.highlighter.active[bufnr]
+    local ts_enabled = pcall(require, "nvim-treesitter")
+    local buf_highlighter = ts_enabled and vim.treesitter.highlighter.active[bufnr]
 
-    if not buf_highlighter then return errors end
+    if not buf_highlighter then return M.get_spelling_errors_iter(bufnr) end
     buf_highlighter.tree:for_each_tree(function(tstree, tree)
         ---@diagnostic disable: invisible
         if not tstree then return end

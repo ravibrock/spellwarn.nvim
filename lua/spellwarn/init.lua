@@ -8,7 +8,7 @@ local defaults = {
         "TextChangedP",
         "TextChangedT",
     },
-    ft_config = { -- filetypes to override ft_default for
+    ft_config = { -- spellcheck method: "cursor", "iter", "treesitter", or boolean
         alpha   = false,
         help    = false,
         lazy    = false,
