@@ -47,7 +47,7 @@ function M.get_spelling_errors_cursor(bufnr)
     local location = vim.fn.getpos(".")
 
     local function adjust_table() -- Add error to table
-        if M.check_spellwarn_comment(bufnr, vim.fn.line(".")) then return end
+        if M.check_spellwarn_comment(0, vim.fn.line(".")) then return end
         local word = vim.fn.expand("<cword>")
         table.insert(errors, {
             col  = location[3],
