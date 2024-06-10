@@ -20,7 +20,7 @@ I recommend using [Lazy.nvim](https://github.com/folke/lazy.nvim):
     config = true,
 }
 ```
-You may also want to add the word "spellwarn" to your Neovim dictionary. This can be done by putting the cursor onto "spellwarn" and hitting `zg`.
+Note that this uses Neovim's built-in spellchecking. This requires putting `vim.opt.spell = true` and `vim.opt.spelllang = [YOUR LANGUAGE HERE]` somewhere in your Neovim config if you haven't already. You may also want to add the word "spellwarn" to your Neovim dictionary. This can be done by putting the cursor onto "spellwarn" and hitting `zg`.
 
 ## Configuration
 Pass any of the following options to `require("spellwarn").setup()`:
