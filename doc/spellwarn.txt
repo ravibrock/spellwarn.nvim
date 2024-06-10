@@ -101,8 +101,8 @@ enable/disable during runtime (though this will _not_ override `max_file_size`,
 `ft_config`, or `ft_default`). To disable diagnostics on a specific line, add
 `spellwarn:disable-next-line` to the line immediately above or
 `spellwarn:disable-line` to a comment at the end of the line. To disable
-diagnostics in a file, add a comment with `spellwarn:disable` to the _first_
-line of the file.
+diagnostics in a file, add a comment with `spellwarn:disable` to the _first or
+second_ line of the file.
 
 
 CONTRIBUTING                           *spellwarn-spellwarn.nvim-contributing*
