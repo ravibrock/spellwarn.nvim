@@ -32,7 +32,6 @@ Pass any of the following options to `require("spellwarn").setup()`:
         "TextChanged",
         "TextChangedI",
         "TextChangedP",
-        "TextChangedT",
     },
     ft_config = { -- spellcheck method: "cursor", "iter", or boolean
         alpha   = false,
