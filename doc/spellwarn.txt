@@ -1,4 +1,4 @@
-*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 June 10
+*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 June 15
 
 ==============================================================================
 Table of Contents                                *spellwarn-table-of-contents*
@@ -59,7 +59,6 @@ Pass any of the following options to `require("spellwarn").setup()`
             "TextChanged",
             "TextChangedI",
             "TextChangedP",
-            "TextChangedT",
         },
         ft_config = { -- spellcheck method: "cursor", "iter", or boolean
             alpha   = false,
