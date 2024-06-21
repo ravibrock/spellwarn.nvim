@@ -49,12 +49,22 @@ function M.enable(opts)
     for _, bufnr in pairs(get_bufs_loaded()) do
         M.update_diagnostics(opts, bufnr)
     end
+    vim.g.spellwarn_enabled = true
 end
 
 function M.disable()
     vim.api.nvim_create_augroup("Spellwarn", {})
     for _, bufnr in pairs(get_bufs_loaded()) do
         vim.diagnostic.reset(namespace, bufnr)
+    end
+    vim.g.spellwarn_enabled = false
+end
+
+function M.toggle(opts)
+    if vim.g.spellwarn_enabled then
+        M.disable()
+    else
+        M.enable(opts)
     end
 end
 
@@ -67,11 +77,13 @@ function M.setup(opts)
                 M.enable(opts)
             elseif arg == "disable" then
                 M.disable()
+            elseif arg == "toggle" then
+                M.toggle(opts)
             else
                 vim.api.nvim_err_writeln("Invalid argument: " .. arg)
             end
         end,
-        { nargs = 1, complete = function() return { "enable", "disable" } end }
+        { nargs = 1, complete = function() return { "disable", "enable", "toggle" } end }
     )
     M.enable(opts)
 end
