@@ -8,6 +8,7 @@ local defaults = {
         "TextChangedI",
         "TextChangedP",
     },
+    enable = true, -- enable diagnostics on startup
     ft_config = { -- spellcheck method: "cursor", "iter", or boolean
         alpha   = false,
         help    = false,
@@ -33,6 +34,11 @@ function M.setup(opts)
     defaults = vim.tbl_extend("force", defaults, opts)
     defaults.severity = vim.tbl_extend("force", severity, opts.severity or {})
     require("spellwarn.diagnostics").setup(defaults)
+
+    -- Expose public functions
+    M.enable = require("spellwarn.diagnostics").enable
+    M.disable = require("spellwarn.diagnostics").disable
+    M.toggle = require("spellwarn.diagnostics").toggle
 end
 
 return M
