@@ -33,6 +33,7 @@ Pass any of the following options to `require("spellwarn").setup()`:
         "TextChangedI",
         "TextChangedP",
     },
+    enable = true, -- enable diagnostics on startup
     ft_config = { -- spellcheck method: "cursor", "iter", or boolean
         alpha   = false,
         help    = false,
@@ -56,7 +57,13 @@ Most options are overwritten (e.g. passing `ft_config = { python = false }` will
 *Note: `iter` doesn't show `spellcap` errors, but works well other than that. I recommend it.*
 
 ## Usage
-The plugin should be good to go after installation with the provided snippet. It has sensible defaults. Run `:Spellwarn enable` or `:Spellwarn disable` to enable/disable during runtime (though this will *not* override `max_file_size`, `ft_config`, or `ft_default`). To disable diagnostics on a specific line, add `spellwarn:disable-next-line` to the line immediately above or `spellwarn:disable-line` to a comment at the end of the line. To disable diagnostics in a file, add a comment with `spellwarn:disable` to the *first or second* line of the file.
+The plugin should be good to go after installation with the provided snippet. It has sensible defaults. Run `:Spellwarn enable`, `:Spellwarn disable`, or `:Spellwarn toggle` to enable/disable/toggle during runtime (though this will *not* override `max_file_size`, `ft_config`, or `ft_default`). You can also add keybindings for any of these (one possible usecase would be disabling by default with the `enable` key of the configuration table and then only enabling when needed). To disable diagnostics on a specific line, add `spellwarn:disable-next-line` to the line immediately above or `spellwarn:disable-line` to a comment at the end of the line. To disable diagnostics in a file, add a comment with `spellwarn:disable` to the *first or second* line of the file.
+
+## Lua API
+The Lua API matches the arguments for the `Spellwarn` command:
+- `require("spellwarn").disable()` to disable
+- `require("spellwarn").enable()` to enable
+- `require("spellwarn").toggle()` to toggle
 
 ## Contributing
 PRs and issues welcome! Please use [Conventional Commits](https://www.conventionalcommits.org/) if submitting a pull request.
