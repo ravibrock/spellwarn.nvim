@@ -1,4 +1,4 @@
-*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 June 15
+*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 June 21
 
 ==============================================================================
 Table of Contents                                *spellwarn-table-of-contents*
@@ -7,6 +7,7 @@ Table of Contents                                *spellwarn-table-of-contents*
   - Installation                       |spellwarn-spellwarn.nvim-installation|
   - Configuration                     |spellwarn-spellwarn.nvim-configuration|
   - Usage                                     |spellwarn-spellwarn.nvim-usage|
+  - Lua API                                 |spellwarn-spellwarn.nvim-lua-api|
   - Contributing                       |spellwarn-spellwarn.nvim-contributing|
 2. Links                                                     |spellwarn-links|
 
@@ -60,6 +61,7 @@ Pass any of the following options to `require("spellwarn").setup()`
             "TextChangedI",
             "TextChangedP",
         },
+        enable = true, -- enable diagnostics on startup
         ft_config = { -- spellcheck method: "cursor", "iter", or boolean
             alpha   = false,
             help    = false,
@@ -95,13 +97,23 @@ recommend it._
 USAGE                                         *spellwarn-spellwarn.nvim-usage*
 
 The plugin should be good to go after installation with the provided snippet.
-It has sensible defaults. Run `:Spellwarn enable` or `:Spellwarn disable` to
-enable/disable during runtime (though this will _not_ override `max_file_size`,
-`ft_config`, or `ft_default`). To disable diagnostics on a specific line, add
+It has sensible defaults. Run `:Spellwarn enable`, `:Spellwarn disable`, or
+`:Spellwarn toggle` to enable/disable/toggle during runtime (though this will
+_not_ override `max_file_size`, `ft_config`, or `ft_default`). You can also add
+keybindings for any of these (one possible usecase would be disabling by
+default with the `enable` key of the configuration table and then only enabling
+when needed). To disable diagnostics on a specific line, add
 `spellwarn:disable-next-line` to the line immediately above or
 `spellwarn:disable-line` to a comment at the end of the line. To disable
 diagnostics in a file, add a comment with `spellwarn:disable` to the _first or
 second_ line of the file.
+
+
+LUA API                                     *spellwarn-spellwarn.nvim-lua-api*
+
+The Lua API matches the arguments for the `Spellwarn` command: -
+`require("spellwarn").disable()` to disable - `require("spellwarn").enable()`
+to enable - `require("spellwarn").toggle()` to toggle
 
 
 CONTRIBUTING                           *spellwarn-spellwarn.nvim-contributing*
