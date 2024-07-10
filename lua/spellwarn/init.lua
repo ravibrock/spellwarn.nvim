@@ -25,13 +25,16 @@ local defaults = {
         spellrare  = "INFO",
     },
     prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
+    diagnostic_opts = { severity_sort = true }, -- options for diagnostic display
 }
 
 function M.setup(opts)
-    -- With most options we want to overwrite the defaults, but with `severity` we want to extend
+    -- With most options we want to overwrite the defaults, but with `severity` and `diagnostic_opts` we want to extend
+    local diagnostic_opts = defaults.diagnostic_opts
     local severity = defaults.severity
     opts = opts or {}
     defaults = vim.tbl_extend("force", defaults, opts)
+    defaults.diagnostic_opts = vim.tbl_extend("force", diagnostic_opts, opts.diagnostic_opts or {})
     defaults.severity = vim.tbl_extend("force", severity, opts.severity or {})
     require("spellwarn.diagnostics").setup(defaults)
 

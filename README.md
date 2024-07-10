@@ -50,9 +50,10 @@ Pass any of the following options to `require("spellwarn").setup()`:
         spellrare  = "INFO",
     },
     prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
+    diagnostic_opts = { severity_sort = true }, -- options for diagnostic display
 }
 ```
-Most options are overwritten (e.g. passing `ft_config = { python = false }` will mean that `alpha`, `mason`, etc. are set to true) but `severity` is merged, so that passing `spellbad = "HINT"` won't cause `spellcap` to be nil. You can pass any of `cursor`, `iter`, `treesitter`, `false`, or `true` as options to `ft_config`. The default method is `cursor`, which iterates through the buffer with `]s`. There is also `iter`, which uses Treesitter (if available) and the Lua API. Finally, `false` disables Spellwarn for that filetype and `true` uses the default (`cursor`).
+Most options are overwritten (e.g. passing `ft_config = { python = false }` will mean that `alpha`, `mason`, etc. are set to true) but `severity` and `diagnostic_opts` are merged, so that (for example) passing `{ spellbad = "HINT" }` won't cause `spellcap` to be nil. You can pass any of `cursor`, `iter`, `treesitter`, `false`, or `true` as options to `ft_config`. The default method is `cursor`, which iterates through the buffer with `]s`. There is also `iter`, which uses Treesitter (if available) and the Lua API. Finally, `false` disables Spellwarn for that filetype and `true` uses the default (`cursor`).
 
 *Note: `iter` doesn't show `spellcap` errors, but works well other than that. I recommend it.*
 
