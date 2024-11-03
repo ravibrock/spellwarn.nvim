@@ -11,7 +11,7 @@ end
 function M.check_spellwarn_comment(bufnr, linenr) -- Check for spellwarn:disable* comments
     local above = (linenr > 1 and vim.api.nvim_buf_get_lines(bufnr, linenr - 2, linenr - 1, false)[1]) or ""
     local above_val = string.find(above, "spellwarn:disable-next-line", 1, true) ~= nil
-    local cur = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1]
+    local cur = vim.api.nvim_buf_get_lines(bufnr, linenr - 1, linenr, false)[1] or ""
     local cur_val = string.find(cur, "spellwarn:disable-line", 1, true) ~= nil
     return above_val or cur_val
 end
