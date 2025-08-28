@@ -24,6 +24,8 @@ local defaults = {
         spelllocal = "HINT",
         spellrare  = "INFO",
     },
+    suggest = false, -- show spelling suggestions in diagnostic message
+    num_suggest = 3, -- number of suggestions shown in diagnostic message
     prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
     diagnostic_opts = { severity_sort = true }, -- options for diagnostic display
 }
