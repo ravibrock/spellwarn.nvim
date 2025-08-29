@@ -27,7 +27,7 @@ function M.update_diagnostics(opts, bufnr)
 				local msg = opts.prefix .. error.word
 				
 				if opts.suggest then
-					  local addition = ""
+					  local addition = "\nSuggestions: "
 					  for i = 1, opts.num_suggest do
 						    if i == opts.num_suggest then
 							    	addition = addition .. i .. '. ' .. suggestions[i]
@@ -35,7 +35,7 @@ function M.update_diagnostics(opts, bufnr)
 						    		addition = addition .. i .. '. ' .. suggestions[i] .. '\n'
 						    end
 					  end
-					  msg = msg .. '\n' .. addition
+					  msg = msg .. addition
 				end
 
 				if error.word ~= "" and error.word ~= "spellwarn" then
@@ -108,3 +108,4 @@ function M.setup(opts)
 end
 
 return M
+
