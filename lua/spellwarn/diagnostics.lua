@@ -26,8 +26,8 @@ function M.update_diagnostics(opts, bufnr)
 				
 		local msg = opts.prefix .. error.word
 				
-		if opts.suggest then
-			local addition = "\nSuggestions: "
+		if opts.suggest and opts.num_suggest > 0 then
+			local addition = "\nSuggestions: \n"
 			for i = 1, opts.num_suggest do
 				if suggestions[i] then
 					if i == opts.num_suggest then
@@ -110,5 +110,6 @@ function M.setup(opts)
 end
 
 return M
+
 
 
