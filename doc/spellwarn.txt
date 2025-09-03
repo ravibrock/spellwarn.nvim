@@ -1,4 +1,4 @@
-*spellwarn.txt*            For NVIM v0.8.0           Last change: 2024 July 10
+*spellwarn.txt*         For NVIM v0.8.0         Last change: 2025 September 03
 
 ==============================================================================
 Table of Contents                                *spellwarn-table-of-contents*
@@ -77,6 +77,8 @@ Pass any of the following options to `require("spellwarn").setup()`
             spelllocal = "HINT",
             spellrare  = "INFO",
         },
+        suggest = false, -- show spelling suggestions in diagnostic message (works best with window-style message)
+        num_suggest = 3, -- number of spelling suggestions shown in diagnostic message
         prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
         diagnostic_opts = { severity_sort = true }, -- options for diagnostic display
     }
@@ -90,6 +92,10 @@ will mean that `alpha`, `mason`, etc. are set to true) but `severity` and
 method is `cursor`, which iterates through the buffer with `]s`. There is also
 `iter`, which uses Treesitter (if available) and the Lua API. Finally, `false`
 disables Spellwarn for that filetype and `true` uses the default (`cursor`).
+The `suggest` option adds spelling suggestions to the diagnostic message, it
+does not allow auto-complete. `num_suggest` specifies the number of suggestions
+to show in the diagnostic message. **If you have suggest set to true, you need
+to also have num_suggest >= 1 or else you will have an error.**
 
 _Note: iter doesn’t show spellcap errors, but works well other than that. I
 recommend it._
