@@ -1,0 +1,15 @@
+# top-most editorconfig file
+root = true
+
+# default settings for all files
+[*]
+end_of_line = lf
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# common json/yaml expectations
+[*.{json,yml,yaml}]
+indent_size = 2  # adjust if you truly want 4 here
