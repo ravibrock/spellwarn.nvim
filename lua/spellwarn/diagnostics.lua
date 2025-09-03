@@ -22,21 +22,21 @@ function M.update_diagnostics(opts, bufnr)
     local diags = {}
     for _, error in pairs(require("spellwarn.spelling").get_spelling_errors_main(opts, bufnr) or {}) do
         local suggestions = vim.fn.spellsuggest(error.word)
-				local msg = opts.prefix .. error.word
-				if opts.suggest and opts.num_suggest > 0 then
-					  local addition = "\nSuggestions:\n"
-					  for i = 1, opts.num_suggest do
-							  if suggestions[i] then
-						    		if i == opts.num_suggest then
-							    			addition = addition .. i .. '. ' .. suggestions[i]
-						    		else
-						    				addition = addition .. i .. '. ' .. suggestions[i] .. '\n'
-						    		end
-								end
-					  end
-					  msg = msg .. addition
-				end
-				if error.word ~= "" and error.word ~= "spellwarn" then
+        local msg = opts.prefix .. error.word
+        if opts.suggest and opts.num_suggest > 0 then
+            local addition = "\nSuggestions:\n"
+            for i = 1, opts.num_suggest do
+                if suggestions[i] then
+                    if i == opts.num_suggest then
+                        addition = addition .. i .. ". " .. suggestions[i]
+                    else
+                        addition = addition .. i .. ". " .. suggestions[i] .. "\n"
+                    end
+                end
+            end
+            msg = msg .. addition
+        end
+        if error.word ~= "" and error.word ~= "spellwarn" then
             if opts.severity[error.type] then
                 diags[#diags + 1] = {
                     col      = error.col - 1, -- 0-indexed
