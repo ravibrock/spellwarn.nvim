@@ -69,4 +69,4 @@ The Lua API matches the arguments for the `Spellwarn` command:
 - `require("spellwarn").toggle()` to toggle
 
 ## Contributing
-PRs and issues welcome! Please use [Conventional Commits](https://www.conventionalcommits.org/) if submitting a pull request.
+PRs and issues welcome! Please consult `CONTRIBUTING.md` for style guidelines.
