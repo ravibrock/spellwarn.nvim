@@ -23,7 +23,7 @@ function M.update_diagnostics(opts, bufnr)
     for _, error in pairs(require("spellwarn.spelling").get_spelling_errors_main(opts, bufnr) or {}) do
         local msg = opts.prefix .. error.word
         if opts.suggest and opts.num_suggest > 0 then
-            local suggestions = vim.fn.spellsuggest(error.word)
+            local suggestions = vim.fn.spellsuggest(error.word, opts.num_suggest)
             local addition = "\nSuggestions:\n"
             for i = 1, opts.num_suggest do
                 if suggestions[i] then
