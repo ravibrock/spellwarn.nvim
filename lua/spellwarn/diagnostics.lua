@@ -94,7 +94,7 @@ function M.setup(opts)
             elseif arg == "toggle" then
                 M.toggle()
             else
-                vim.api.nvim_err_writeln("Invalid argument: " .. arg)
+                vim.api.nvim_echo({ { "Invalid argument: " .. arg .. "\n" } }, true, { err = true })
             end
         end,
         { nargs = 1, complete = function() return { "disable", "enable", "toggle" } end }
