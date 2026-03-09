@@ -54,22 +54,33 @@ function M.update_diagnostics(opts, bufnr)
     vim.diagnostic.set(namespace, bufnr, diags, opts.diagnostic_opts)
 end
 
+local function can_update(opts, bufnr)
+    local winid = vim.api.nvim_get_current_win()
+    if winid then
+        if not vim.wo[winid].spell then
+            vim.diagnostic.reset(namespace, bufnr) -- ensure old are cleared if spell is toggled to off.
+            return
+        end
+    end
+
+    local buftype = vim.api.nvim_get_option_value("buftype", { buf = bufnr })
+    if opts.bt_config[buftype] then
+        return opts.bt_config[buftype]
+    end
+
+    return opts.bt_default
+end
+
 function M.setup(opts)
     function M.enable()
         vim.api.nvim_create_augroup("Spellwarn", {})
         vim.api.nvim_create_autocmd(opts.event, {
             group = "Spellwarn",
             callback = function()
-                local winid = vim.api.nvim_get_current_win()
                 local bufnr = vim.fn.bufnr("%")
-                if winid then
-                    if not vim.wo[winid].spell then
-                        vim.diagnostic.reset(namespace, bufnr) -- ensure old are cleared if spell is toggled to off.
-                        return
-                    end
+                if can_update(opts, bufnr) then
+                    M.update_diagnostics(opts, bufnr)
                 end
-
-                M.update_diagnostics(opts, bufnr)
             end,
             desc = "Update Spellwarn diagnostics",
         })
