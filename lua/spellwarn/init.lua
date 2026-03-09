@@ -11,6 +11,10 @@ local defaults = {
 
     enable = true, -- enable diagnostics on startup
 
+    func_preprocess = function(diag_tbl)
+        return diag_tbl
+    end, -- function to do any custom processing of the diagnostics table before passing it to vim.diagnostic.set
+
     bt_config = { -- buffer types to run on
         [""] = true,
     },
