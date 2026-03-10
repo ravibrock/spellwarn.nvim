@@ -53,7 +53,6 @@ local function can_update(opts, bufnr)
     local winid = vim.api.nvim_get_current_win()
     if winid then
         if not vim.wo[winid].spell then
-            vim.diagnostic.reset(namespace, bufnr) -- ensure old are cleared if spell is toggled to off.
             return
         end
     end
