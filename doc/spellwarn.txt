@@ -1,4 +1,5 @@
-*spellwarn.txt*           For NVIM v0.8.0           Last change: 2026 March 13
+*spellwarn.txt*
+                                  For NVIM v0.8.0    Last change: 2026 July 13
 
 ==============================================================================
 Table of Contents                                *spellwarn-table-of-contents*
@@ -97,7 +98,7 @@ Pass any of the following options to `require("spellwarn").setup()`:
         },
 <
 
-Most options are overwritten (e.g. passing `ft_config = { python = false }`
+Most options are overwritten (e.g. passing `ft_config = { python = false }`
 will mean that `alpha`, `mason`, etc. are set to true) but `severity` and
 `diagnostic_opts` are merged, so that (for example) passing `{ spellbad =
 "HINT" }` won’t cause `spellcap` to be nil. You can pass any of `cursor`,
