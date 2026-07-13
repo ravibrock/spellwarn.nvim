@@ -48,10 +48,22 @@ function M.setup(opts)
     -- With most options we want to overwrite the defaults, but with `severity` and `diagnostic_opts` we want to extend
     local diagnostic_opts = defaults.diagnostic_opts
     local severity = defaults.severity
-    opts = opts or {}
+    local severity_opts = opts.severity or {}
+
+    -- backwards compatibility with passing strings
+    for name, value in pairs(severity_opts) do
+        if type(value) == "string" then
+            severity_opts[name] = vim.tbl_extend(
+                "force",
+                severity[name] or {},
+                { level = value }
+            )
+        end
+    end
+
     defaults = vim.tbl_extend("force", defaults, opts)
     defaults.diagnostic_opts = vim.tbl_extend("force", diagnostic_opts, opts.diagnostic_opts or {})
-    defaults.severity = vim.tbl_extend("force", severity, opts.severity or {})
+    defaults.severity = vim.tbl_extend("force", severity, severity_opts)
     require("spellwarn.diagnostics").setup(defaults)
 
     -- Expose public functions
