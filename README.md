@@ -12,7 +12,9 @@ This is a plugin to display spelling errors as diagnostics. Some language server
 A simpler solution, therefore, is to use Neovim's existing spellchecking and diagnostics features. This is done by iterating through the flagged words in a buffer and passing them to `vim.diagnostic.set()`. Neovim is fast enough that this is ~instantaneous for most files. See below for installation and configuration instructions.
 
 ## Installation
+
 I recommend using [Lazy.nvim](https://github.com/folke/lazy.nvim):
+
 ```lua
 {
     "ravibrock/spellwarn.nvim",
@@ -23,7 +25,9 @@ I recommend using [Lazy.nvim](https://github.com/folke/lazy.nvim):
 Note that this uses Neovim's built-in spellchecking. This requires putting `vim.opt.spell = true` and `vim.opt.spelllang = [YOUR LANGUAGE HERE]` somewhere in your Neovim config if you haven't already. You may also want to add the word "spellwarn" to your Neovim dictionary. This can be done by putting the cursor onto "spellwarn" and hitting `zg`.
 
 ## Configuration
+
 Pass any of the following options to `require("spellwarn").setup()`:
+
 ```lua
 {
     event = { -- event(s) to refresh diagnostics on
@@ -33,40 +37,60 @@ Pass any of the following options to `require("spellwarn").setup()`:
         "TextChangedI",
         "TextChangedP",
     },
+
     enable = true, -- enable diagnostics on startup
+
+    max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
+
+    suggest = false, -- show spelling suggestions in diagnostic message
+    num_suggest = 3, -- number of suggestions shown in diagnostic message
+
+    -- function to do any custom processing of the diagnostics table before passing it to vim.diagnostic.set
+    func_preprocess = function(bufnr, diag_tbl)
+        return diag_tbl
+    end,
+
+    bt_config = { -- buffer types to run on
+        [""] = true,
+    },
+    bt_default = false, -- default for types not in bt_config.
+
     ft_config = { -- spellcheck method: "cursor", "iter", or boolean
-        alpha   = false,
-        help    = false,
-        lazy    = false,
+        alpha = false,
+        help = false,
+        lazy = false,
         lspinfo = false,
-        mason   = false,
+        mason = false,
     },
     ft_default = true, -- default option for unspecified filetypes
-    max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
-    severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
-        spellbad   = "WARN",
-        spellcap   = "HINT",
-        spelllocal = "HINT",
-        spellrare  = "INFO",
-    },
-    suggest = false, -- show spelling suggestions in diagnostic message (works best with window-style message)
-    num_suggest = 3, -- number of spelling suggestions shown in diagnostic message
-    prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
+
     diagnostic_opts = { severity_sort = true }, -- options for diagnostic display
-}
+    severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
+        spellbad = { level = "WARN", prefix = "Unknown Word: ", suffix = "" },
+        spellcap = { level = "HINT", prefix = "Missing capital: ", suffix = "" },
+        spelllocal = { level = "HINT", prefix = "Word Localization: ", suffix = "" },
+        spellrare = { level = "INFO", prefix = "Rare Word: ", suffix = "" },
+    },
 ```
+
 Most options are overwritten (e.g. passing `ft_config = { python = false }` will mean that `alpha`, `mason`, etc. are set to true) but `severity` and `diagnostic_opts` are merged, so that (for example) passing `{ spellbad = "HINT" }` won't cause `spellcap` to be nil. You can pass any of `cursor`, `iter`, `treesitter`, `false`, or `true` as options to `ft_config`. The default method is `cursor`, which iterates through the buffer with `]s`. There is also `iter`, which uses Treesitter (if available) and the Lua API. Finally, `false` disables Spellwarn for that filetype and `true` uses the default (`cursor`). The `suggest` option adds spelling suggestions to the diagnostic message, it does not allow auto-complete. `num_suggest` specifies the number of suggestions to show in the diagnostic message. **If you have `suggest` set to `true`, you need to also have `num_suggest >= 1` or else you will have an error.**
 
 *Note: `iter` doesn't show `spellcap` errors, but works well other than that. I recommend it.*
 
 ## Usage
+
 The plugin should be good to go after installation with the provided snippet. It has sensible defaults. Run `:Spellwarn enable`, `:Spellwarn disable`, or `:Spellwarn toggle` to enable/disable/toggle during runtime (though this will *not* override `max_file_size`, `ft_config`, or `ft_default`). You can also add keybindings for any of these (one possible usecase would be disabling by default with the `enable` key of the configuration table and then only enabling when needed). To disable diagnostics on a specific line, add `spellwarn:disable-next-line` to the line immediately above or `spellwarn:disable-line` to a comment at the end of the line. To disable diagnostics in a file, add a comment with `spellwarn:disable` to the *first or second* line of the file.
 
+`Spellwarn qflist` will show the quickfix window, populated with the list of spelling mistakes in the current buffer.
+
 ## Lua API
+
 The Lua API matches the arguments for the `Spellwarn` command:
 - `require("spellwarn").disable()` to disable
 - `require("spellwarn").enable()` to enable
 - `require("spellwarn").toggle()` to toggle
+- `require("spellwarn").qflist()` to show the quickfix window
 
 ## Contributing
+
 PRs and issues welcome! Please consult `CONTRIBUTING.md` for style guidelines.

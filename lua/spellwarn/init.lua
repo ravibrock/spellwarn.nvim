@@ -8,7 +8,24 @@ local defaults = {
         "TextChangedI",
         "TextChangedP",
     },
+
     enable = true, -- enable diagnostics on startup
+
+    max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
+
+    suggest = false, -- show spelling suggestions in diagnostic message
+    num_suggest = 3, -- number of suggestions shown in diagnostic message
+
+    -- function to do any custom processing of the diagnostics table before passing it to vim.diagnostic.set
+    func_preprocess = function(bufnr, diag_tbl)
+        return diag_tbl
+    end,
+
+    bt_config = { -- buffer types to run on
+        [""] = true,
+    },
+    bt_default = false, -- default for types not in bt_config.
+
     ft_config = { -- spellcheck method: "cursor", "iter", or boolean
         alpha = false,
         help = false,
@@ -17,17 +34,14 @@ local defaults = {
         mason = false,
     },
     ft_default = true, -- default option for unspecified filetypes
-    max_file_size = nil, -- maximum file size to check in lines (nil for no limit)
-    severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
-        spellbad = "WARN",
-        spellcap = "HINT",
-        spelllocal = "HINT",
-        spellrare = "INFO",
-    },
-    suggest = false, -- show spelling suggestions in diagnostic message
-    num_suggest = 3, -- number of suggestions shown in diagnostic message
-    prefix = "possible misspelling(s): ", -- prefix for each diagnostic message
+
     diagnostic_opts = { severity_sort = true }, -- options for diagnostic display
+    severity = { -- severity for each spelling error type (false to disable diagnostics for that type)
+        spellbad = { level = "WARN", prefix = "Unknown Word: ", suffix = "" },
+        spellcap = { level = "HINT", prefix = "Missing capital: ", suffix = "" },
+        spelllocal = { level = "HINT", prefix = "Word Localization: ", suffix = "" },
+        spellrare = { level = "INFO", prefix = "Rare Word: ", suffix = "" },
+    },
 }
 
 function M.setup(opts)
@@ -44,6 +58,9 @@ function M.setup(opts)
     M.enable = require("spellwarn.diagnostics").enable
     M.disable = require("spellwarn.diagnostics").disable
     M.toggle = require("spellwarn.diagnostics").toggle
+    M.qflist = function()
+        require("spellwarn.qflist").qflist(defaults)
+    end
 end
 
 return M
